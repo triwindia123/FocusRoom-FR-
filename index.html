@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusRoom - Modern Productivity Platform</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans selection:bg-emerald-500 selection:text-slate-950 min-h-screen">
+
+  <!-- ==================== 1. LANDING PAGE ==================== -->
+  <div id="landing-page" class="min-h-screen flex flex-col justify-between relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/2 -right-40 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <header class="max-w-7xl mx-auto w-full px-8 py-6 flex items-center justify-between z-10">
+      <div class="flex items-center gap-3">
+        <div class="bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 w-10 h-10 rounded-2xl flex items-center justify-center font-black text-lg shadow-lg shadow-emerald-500/20">FR</div>
+        <span class="font-black text-2xl tracking-tight text-white">FocusRoom</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="showPage('auth'); switchAuthTab('login');" class="text-sm font-semibold px-5 py-2.5 text-slate-300 hover:text-white transition">Login</button>
+        <button onclick="showPage('auth'); switchAuthTab('register');" class="text-sm font-semibold px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-2xl transition shadow-lg shadow-emerald-500/20 font-bold">Daftar</button>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full px-8 py-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center flex-1 z-10">
+      <div class="space-y-6">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-400 rounded-full text-xs font-bold border border-emerald-500/20 backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Realtime Collaborative Workspace
+        </div>
+        <h1 class="text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight">
+          Fokus bersama.<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">Selesaikan lebih banyak.</span>
+        </h1>
+        <p class="text-slate-400 text-base lg:text-lg max-w-lg leading-relaxed">
+          Ruang virtual interaktif kelas dunia dengan Zen Mode, Live Chat sinkron, Ambient Audio, dan pelacak produktivitas.
+        </p>
+        <div class="pt-4 flex gap-4">
+          <button onclick="showPage('auth'); switchAuthTab('login');" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-4 px-8 rounded-2xl shadow-xl shadow-emerald-500/20 flex items-center gap-3 transition text-base group">
+            Mulai Fokus Sekarang <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-8 flex flex-col justify-center items-center h-[420px] shadow-2xl backdrop-blur-xl relative group">
+        <div class="absolute inset-0 bg-gradient-to-tr from-emerald-500/5 to-transparent rounded-3xl"></div>
+        <div class="w-20 h-20 bg-emerald-500/10 rounded-3xl border border-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-inner">
+          <i data-lucide="cpu" class="w-10 h-10 animate-pulse"></i>
+        </div>
+        <p class="text-slate-300 font-bold text-sm mt-6">Modern Virtual Focus Space</p>
+        <p class="text-slate-500 text-xs mt-1">Sinkronisasi instan tanpa jeda antar perangkat</p>
+      </div>
+    </main>
+
+    <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500 z-10">
+      &copy; 2026 FocusRoom. All rights reserved.
+    </footer>
+  </div>
+
+
+  <!-- ==================== 2. LOGIN / REGISTER PAGE ==================== -->
+  <div id="auth-page" class="hidden min-h-screen flex flex-col justify-center items-center p-6 bg-slate-950 relative overflow-hidden">
+    <div class="absolute w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-md w-full bg-slate-900/80 border border-slate-800/80 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl space-y-6 relative z-10">
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center gap-2">
+          <div class="bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm">FR</div>
+          <span class="font-black text-2xl tracking-tight text-white">FocusRoom</span>
+        </div>
+        <p class="text-slate-400 text-xs">Masuk ke akun kamu untuk melanjutkan sesi</p>
+      </div>
+
+      <div class="flex bg-slate-950 p-1 rounded-2xl border border-slate-800">
+        <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl transition bg-emerald-500 text-slate-950 shadow-sm">Login</button>
+        <button id="tab-register" onclick="switchAuthTab('register')" class="flex-1 py-2.5 text-center text-xs font-bold rounded-xl transition text-slate-400 hover:text-white">Register</button>
+      </div>
+
+      <form class="space-y-4" onsubmit="handleAuthSubmit(event)">
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-300">Username</label>
+          <input type="text" id="input-username" placeholder="Masukkan username" required class="w-full px-4 py-3 text-xs bg-slate-950 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-emerald-500 transition">
+        </div>
+
+        <div id="field-email" class="hidden space-y-1.5">
+          <label class="text-xs font-bold text-slate-300">Email</label>
+          <input type="email" id="input-email" placeholder="email@contoh.com" class="w-full px-4 py-3 text-xs bg-slate-950 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-emerald-500 transition">
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center">
+            <label class="text-xs font-bold text-slate-300">Password</label>
+            <a href="#" id="forgot-password" class="text-xs text-emerald-400 hover:underline">Lupa password?</a>
+          </div>
+          <input type="password" id="input-password" placeholder="••••••••" required class="w-full px-4 py-3 text-xs bg-slate-950 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-emerald-500 transition">
+        </div>
+
+        <button type="submit" id="btn-submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3.5 rounded-2xl text-xs transition shadow-lg shadow-emerald-500/20">Login</button>
+      </form>
+
+      <div class="text-center pt-2">
+        <button onclick="showPage('landing')" class="text-xs font-semibold text-slate-400 hover:text-white transition">← Kembali ke Halaman Utama</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== 3. MAIN DASHBOARD LAYOUT ==================== -->
+  <div id="app-layout" class="hidden min-h-screen flex flex-col bg-slate-950">
+    
+    <!-- Header Navbar -->
+    <header class="bg-slate-900/60 border-b border-slate-800/80 sticky top-0 z-30 backdrop-blur-xl">
+      <div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+        
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="switchMainTab('dashboard')">
+          <div class="bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm shadow-md group-hover:scale-105 transition">FR</div>
+          <h1 class="text-xl font-black tracking-tight text-white">FocusRoom</h1>
+        </div>
+
+        <nav class="flex items-center gap-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
+          <button id="nav-dashboard" onclick="switchMainTab('dashboard')" class="flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold transition">
+            <i data-lucide="home" class="w-4 h-4"></i> Beranda
+          </button>
+          <button id="nav-explore" onclick="switchMainTab('explore')" class="flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold transition">
+            <i data-lucide="compass" class="w-4 h-4"></i> Jelajahi
+          </button>
+          <button id="nav-history" onclick="switchMainTab('history')" class="flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold transition">
+            <i data-lucide="history" class="w-4 h-4"></i> Riwayat
+          </button>
+        </nav>
+
+        <div class="flex items-center gap-4">
+          <!-- Daily Streak Badge -->
+          <div class="flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 px-3.5 py-2 rounded-2xl text-xs font-black backdrop-blur-md">
+            <i data-lucide="flame" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+            <span id="streak-display-count">1</span> Hari
+          </div>
+
+          <div onclick="switchMainTab('profile')" class="flex items-center gap-3 cursor-pointer p-1.5 rounded-2xl hover:bg-slate-800/50 transition">
+            <span class="user-display-name text-xs font-bold text-slate-200">-</span>
+            <div class="user-avatar w-9 h-9 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-black text-xs shadow-md">-</div>
+          </div>
+          <button onclick="logout()" class="p-2.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition" title="Keluar">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto w-full px-8 py-8 flex-1">
+
+      <!-- TAB BERANDA -->
+      <div id="tab-dashboard" class="space-y-8">
+        <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/40 border border-slate-800 rounded-3xl p-8 text-white shadow-2xl flex justify-between items-center relative overflow-hidden">
+          <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="space-y-2 relative z-10">
+            <h2 class="text-3xl font-black">Good evening, <span class="user-greeting-name text-emerald-400">-</span> 👋</h2>
+            <p class="text-slate-400 text-xs sm:text-sm">Pertahankan streak fokusmu hari ini. Buat atau gabung ke room aktif!</p>
+          </div>
+          <button onclick="openModal('modal-create-room')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-emerald-500/20 flex items-center gap-2 transition text-xs relative z-10">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Buat Room Baru
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div class="lg:col-span-2 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-black text-lg text-white">Room yang Sedang Aktif</h3>
+              <button onclick="switchMainTab('explore')" class="text-xs text-emerald-400 hover:underline font-bold">Lihat Semua →</button>
+            </div>
+
+            <div id="active-rooms-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div id="empty-active-rooms" class="col-span-full bg-slate-900/50 border border-dashed border-slate-800 rounded-3xl p-12 text-center space-y-3">
+                <div class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto text-slate-500">
+                  <i data-lucide="folder-open" class="w-6 h-6"></i>
+                </div>
+                <h4 class="font-bold text-slate-300 text-sm">Belum ada room yang aktif</h4>
+                <p class="text-xs text-slate-500 max-w-sm mx-auto">Klik tombol "Buat Room Baru" di atas untuk membuat ruang fokus pertamamu.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <h3 class="font-black text-lg text-white">Ringkasan Ringkas</h3>
+            <div class="bg-slate-900 border border-slate-800/80 rounded-3xl p-6 shadow-xl space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <span class="text-xs font-semibold text-slate-400">Streak Berturut-turut</span>
+                <span id="stat-streak-display" class="text-sm font-black text-amber-400 flex items-center gap-1"><i data-lucide="flame" class="w-4 h-4"></i> 1 Hari</span>
+              </div>
+              <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <span class="text-xs font-semibold text-slate-400">Total Fokus Hari Ini</span>
+                <span id="stat-today-time" class="text-sm font-black text-white">0h 0m</span>
+              </div>
+              <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <span class="text-xs font-semibold text-slate-400">Total Sesi</span>
+                <span id="stat-total-sessions" class="text-sm font-bold text-white">0 Sesi</span>
+              </div>
+              <button onclick="switchMainTab('history')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-3 rounded-2xl transition">
+                Lihat Detail Riwayat
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- TAB JELAJAHI -->
+      <div id="tab-explore" class="hidden space-y-6">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-2xl font-black text-white">Jelajahi Room</h2>
+            <p class="text-xs text-slate-400 mt-1">Cari dan ikuti room yang dibuat oleh pengguna lain.</p>
+          </div>
+          <div class="relative w-72">
+            <input type="text" placeholder="Cari room..." class="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-900 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-emerald-500">
+            <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-3"></i>
+          </div>
+        </div>
+
+        <div id="explore-rooms-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div id="empty-explore-rooms" class="col-span-full bg-slate-900/50 border border-dashed border-slate-800 rounded-3xl p-12 text-center space-y-3">
+            <div class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto text-slate-500">
+              <i data-lucide="compass" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-bold text-slate-300 text-sm">Belum ada room publik tersedia</h4>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">Buat room baru dan bagikan dengan yang lain.</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- TAB RIWAYAT -->
+      <div id="tab-history" class="hidden space-y-6 max-w-4xl mx-auto">
+        <h2 class="text-2xl font-black text-white">Riwayat Sesi Fokus</h2>
+        
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl flex justify-between items-center">
+          <div>
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Waktu Fokus</span>
+            <p id="history-total-time" class="text-3xl font-black text-emerald-400 mt-1">0 menit</p>
+          </div>
+          <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+            <i data-lucide="clock" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div id="history-list" class="space-y-4">
+          <div id="empty-history" class="bg-slate-900/50 border border-dashed border-slate-800 rounded-3xl p-12 text-center space-y-3">
+            <div class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto text-slate-500">
+              <i data-lucide="history" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-bold text-slate-300 text-sm">Belum ada riwayat fokus</h4>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">Selesaikan sesi fokusmu untuk mencatat kemajuan di sini.</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- TAB PROFIL -->
+      <div id="tab-profile" class="hidden max-w-2xl mx-auto space-y-8">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-xl text-center space-y-4">
+          <div class="user-avatar w-24 h-24 rounded-full bg-emerald-500 text-slate-950 text-4xl font-black flex items-center justify-center mx-auto shadow-xl">-</div>
+          <div>
+            <h2 class="user-display-name text-2xl font-black text-white">-</h2>
+            <p id="profile-email" class="text-xs text-slate-400 mt-1">-</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4">
+          <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl text-center shadow-xl">
+            <span class="block text-xs font-semibold text-slate-400">Level Fokus</span>
+            <span id="profile-level" class="font-black text-2xl text-emerald-400 mt-1 block">Lvl 1</span>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl text-center shadow-xl">
+            <span class="block text-xs font-semibold text-slate-400">Daily Streak</span>
+            <span id="profile-streak" class="font-black text-2xl text-amber-400 mt-1 block">1 Hari</span>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl text-center shadow-xl">
+            <span class="block text-xs font-semibold text-slate-400">Total Waktu</span>
+            <span id="profile-total-time" class="font-black text-2xl text-white mt-1 block">0 Mnt</span>
+          </div>
+        </div>
+
+        <button onclick="logout()" class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold py-3.5 rounded-2xl text-xs border border-red-500/20 transition">
+          Keluar dari Akun
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+
+  <!-- ==================== 4. FOCUS ROOM RUNNING ==================== -->
+  <div id="focus-room-active-page" class="hidden min-h-screen bg-slate-950 text-white flex flex-col justify-between">
+    
+    <!-- Top Header Active Room -->
+    <header id="room-header" class="bg-slate-900/80 border-b border-slate-800/80 px-8 py-4 flex justify-between items-center z-10 backdrop-blur-xl transition-all">
+      <div class="flex items-center gap-3">
+        <div class="bg-emerald-500/10 text-emerald-400 p-2.5 rounded-2xl border border-emerald-500/20">
+          <i data-lucide="zap" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h2 id="active-room-title-display" class="font-black text-base text-white">Nama Room</h2>
+          <p id="active-room-target-display" class="text-xs text-slate-400 mt-0.5">Target: -</p>
+        </div>
+      </div>
+
+      <!-- Quick Controls -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 bg-slate-950 px-3.5 py-2 rounded-2xl border border-slate-800">
+          <i data-lucide="music" class="w-4 h-4 text-emerald-400"></i>
+          <select id="ambient-select" onchange="changeAmbientSound()" class="bg-transparent text-xs font-medium text-slate-300 focus:outline-none">
+            <option value="none" class="bg-slate-900 text-white">Muted / Tanpa Suara</option>
+            <option value="rain" class="bg-slate-900 text-white">🌧 Suara Hujan (Rain)</option>
+            <option value="cafe" class="bg-slate-900 text-white">☕ Ambient Kafe</option>
+            <option value="lofi" class="bg-slate-900 text-white">🎵 Musik Lo-Fi Chill</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-2 bg-slate-950 px-3.5 py-2 rounded-2xl border border-slate-800">
+          <i data-lucide="bell" class="w-4 h-4 text-amber-400"></i>
+          <select id="bell-sound-select" class="bg-transparent text-xs font-medium text-slate-300 focus:outline-none">
+            <option value="bell" class="bg-slate-900 text-white">🔔 Bell Notifikasi</option>
+            <option value="chime" class="bg-slate-900 text-white">🎵 Chime Melodis</option>
+          </select>
+        </div>
+
+        <!-- Tombol Bagikan Link Room -->
+        <button onclick="copyRoomLink()" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-2xl text-xs font-bold border border-emerald-500/30 flex items-center gap-2 transition" title="Bagikan Link Room">
+          <i data-lucide="share-2" class="w-4 h-4"></i>
+          <span>Bagikan Link</span>
+        </button>
+
+        <!-- Mode Zen (Fullscreen) Button -->
+        <button onclick="toggleZenMode()" class="bg-slate-800/80 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-2xl text-xs font-bold border border-slate-700 flex items-center gap-2 transition" title="Zen / Fullscreen Mode">
+          <i data-lucide="maximize-2" class="w-4 h-4"></i> <span id="zen-btn-text">Zen Mode</span>
+        </button>
+      </div>
+
+      <button onclick="leaveSessionEarly()" class="text-xs font-semibold text-slate-400 hover:text-red-400 transition flex items-center gap-1.5">
+        <i data-lucide="log-out" class="w-4 h-4"></i> Keluar
+      </button>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="flex-1 grid grid-cols-1 lg:grid-cols-3 overflow-hidden">
+      
+      <!-- KOLOM KIRI (TIMER & REAKSI APRESIASI) -->
+      <div id="room-left-col" class="lg:col-span-2 p-8 flex flex-col items-center justify-between space-y-6 overflow-y-auto">
+        <div id="reaction-float-area" class="h-8 flex items-center justify-center gap-2"></div>
+
+        <div class="text-center space-y-6 my-auto">
+          <div class="relative w-80 h-80 mx-auto flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90">
+              <circle cx="160" cy="160" r="145" stroke="currentColor" stroke-width="10" class="text-slate-900" fill="transparent" />
+              <circle id="timer-progress-circle" cx="160" cy="160" r="145" stroke="currentColor" stroke-width="10" class="text-emerald-400 transition-all duration-1000" fill="transparent" stroke-dasharray="911" stroke-dashoffset="0" stroke-linecap="round" />
+            </svg>
+
+            <div class="absolute inset-0 flex flex-col items-center justify-center space-y-2">
+              <span id="timer-display" class="font-mono text-7xl font-black tracking-tight text-white">00:00</span>
+              <span id="timer-status-badge" class="text-xs font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20">
+                SESI AKTIF
+              </span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center gap-3">
+            <span class="text-xs text-slate-500 font-medium">Beri Semangat:</span>
+            <button onclick="sendReaction('👏')" class="p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl border border-slate-800 text-lg transition hover:scale-110 shadow-lg">👏</button>
+            <button onclick="sendReaction('🔥')" class="p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl border border-slate-800 text-lg transition hover:scale-110 shadow-lg">🔥</button>
+            <button onclick="sendReaction('💪')" class="p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl border border-slate-800 text-lg transition hover:scale-110 shadow-lg">💪</button>
+            <button onclick="sendReaction('☕')" class="p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl border border-slate-800 text-lg transition hover:scale-110 shadow-lg">☕</button>
+          </div>
+
+          <div class="flex gap-4 max-w-sm mx-auto w-full pt-2">
+            <button id="btn-pause-timer" onclick="togglePauseTimer()" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-2xl border border-slate-800 transition text-xs flex items-center justify-center gap-2">
+              <i data-lucide="pause" class="w-4 h-4"></i> Istirahat
+            </button>
+            <button onclick="finishSessionNow()" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-4 rounded-2xl transition text-xs shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4"></i> Selesai
+            </button>
+          </div>
+        </div>
+
+        <div class="text-center text-xs text-slate-500">
+          Tetap fokus pada targetmu hingga timer selesai.
+        </div>
+      </div>
+
+      <!-- KOLOM KANAN -->
+      <div id="room-right-col" class="bg-slate-900/60 border-l border-slate-800/80 backdrop-blur-xl flex flex-col justify-between h-full">
+        <div class="flex border-b border-slate-800 text-xs font-bold text-slate-400 bg-slate-950/40">
+          <button id="right-tab-chat" onclick="switchRightPanel('chat')" class="flex-1 py-3.5 text-center border-b-2 border-emerald-500 text-emerald-400 transition">Live Chat</button>
+          <button id="right-tab-members" onclick="switchRightPanel('members')" class="flex-1 py-3.5 text-center border-b-2 border-transparent hover:text-white transition">Anggota (<span id="member-count-badge">1</span>)</button>
+          <button id="right-tab-todo" onclick="switchRightPanel('todo')" class="flex-1 py-3.5 text-center border-b-2 border-transparent hover:text-white transition">To-Do List</button>
+        </div>
+
+        <div id="panel-chat" class="flex-1 flex flex-col justify-between p-4 overflow-hidden space-y-3">
+          <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-3 flex items-start gap-2.5 text-xs">
+            <i data-lucide="pin" class="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+            <div>
+              <span class="font-bold text-emerald-400 block">Target Bersama Room</span>
+              <p id="pinned-target-display" class="text-slate-300 mt-0.5">-</p>
+            </div>
+          </div>
+
+          <div id="chat-messages" class="flex-1 space-y-3 overflow-y-auto pr-2 text-xs">
+            <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800">
+              <span class="font-bold text-emerald-400">System</span>
+              <p class="text-slate-300 mt-1">Selamat datang di room! Silakan gunakan chat ini untuk berdiskusi dengan sopan.</p>
+            </div>
+          </div>
+
+          <form onsubmit="sendChatMessage(event)" class="mt-2 flex gap-2">
+            <input type="text" id="chat-input" placeholder="Tulis pesan..." class="flex-1 bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
+            <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-3 rounded-2xl font-bold text-xs transition shadow-md">Kirim</button>
+          </form>
+        </div>
+
+        <div id="panel-members" class="hidden flex-1 p-4 space-y-3 overflow-y-auto text-xs">
+          <div id="members-list" class="space-y-2"></div>
+        </div>
+
+        <div id="panel-todo" class="hidden flex-1 flex flex-col justify-between p-4 overflow-hidden">
+          <div class="space-y-2 flex-1 overflow-y-auto pr-1">
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Checklist Tugas Sesi Ini</h4>
+            <div id="todo-items-list" class="space-y-2"></div>
+          </div>
+          <form onsubmit="addTodoItem(event)" class="mt-2 flex gap-2">
+            <input type="text" id="todo-input" placeholder="Tambah sub-tugas baru..." class="flex-1 bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
+            <button type="submit" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-3 rounded-2xl font-bold text-xs transition">+</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Audio Elements -->
+  <audio id="audio-rain" loop src="https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg"></audio>
+  <audio id="audio-cafe" loop src="https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg"></audio>
+  <audio id="audio-lofi" loop src="https://actions.google.com/sounds/v1/ambiences/office_park.ogg"></audio>
+  <audio id="audio-bell" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+  <audio id="audio-chime" src="https://actions.google.com/sounds/v1/cartoon/metal_twang.ogg"></audio>
+
+
+  <!-- ==================== MODAL BUAT ROOM ==================== -->
+  <div id="modal-create-room" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-3xl p-8 space-y-6 shadow-2xl relative">
+      <div class="flex justify-between items-center">
+        <h3 class="font-black text-xl text-white">Buat Focus Room Baru</h3>
+        <button onclick="closeModal('modal-create-room')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+      </div>
+      <form onsubmit="handleCreateRoom(event)" class="space-y-4">
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-300">Nama Room</label>
+          <input type="text" id="new-room-title" placeholder="Contoh: Belajar Matematika" required class="w-full px-4 py-3 text-xs bg-slate-950 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-emerald-500 transition">
+        </div>
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-300">Target Utama / Rules Room</label>
+          <input type="text" id="new-room-target" placeholder="Contoh: Selesaikan Bab 3 tanpa gadget" required class="w-full px-4 py-3 text-xs bg-slate-950 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-emerald-500 transition">
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-300">Pola Durasi Pomodoro</label>
+          <select id="preset-duration-select" onchange="applyPresetDuration()" class="w-full px-4 py-3 text-xs bg-slate-950 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-emerald-500 transition">
+            <option value="25">🍅 Pomodoro Klasik (25 Menit)</option>
+            <option value="50">🚀 Deep Work (50 Menit)</option>
+            <option value="15">⚡ Short Sprint (15 Menit)</option>
+            <option value="custom">⚙️ Custom Durasi</option>
+          </select>
+        </div>
+
+        <div id="custom-duration-field" class="hidden space-y-1.5">
+          <label class="text-xs font-bold text-slate-300">Durasi Sesi Kustom (Menit)</label>
+          <input type="number" id="new-room-duration" value="25" min="1" max="180" class="w-full px-4 py-3 text-xs bg-slate-950 border border-slate-800 rounded-2xl text-white focus:outline-none focus:border-emerald-500 transition">
+        </div>
+
+        <button type="submit" id="btn-submit-room" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-4 rounded-2xl text-xs transition shadow-lg shadow-emerald-500/20">
+          Buat dan Terbitkan Room
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    lucide.createIcons();
+
+    const SUPABASE_URL = "https://qtjanhgoqjsryjzopprn.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_-7VROQLHCVg9SWcEqjtTJQ_8ER_g0_z";
+    
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = { username: 'User', email: '' };
+    let roomsData = [];
+    let historyData = [];
+    let todoItems = [];
+    let isZenMode = false;
+
+    let activeRoomSession = null;
+    let timerInterval = null;
+    let totalSecondsRemaining = 0;
+    let totalSessionSeconds = 0;
+    let isPaused = false;
+    let activeRoomChannel = null;
+
+    async function fetchRooms() {
+      const { data, error } = await supabaseClient
+        .from('rooms')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error) {
+        roomsData = data || [];
+        renderRooms();
+      }
+    }
+
+    function setupRealtimeSubscription() {
+      supabaseClient
+        .channel('public:rooms')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'rooms' }, payload => {
+          fetchRooms();
+        })
+        .subscribe();
+    }
+
+    function showPage(page) {
+      document.getElementById('landing-page').classList.add('hidden');
+      document.getElementById('auth-page').classList.add('hidden');
+      document.getElementById('app-layout').classList.add('hidden');
+      document.getElementById('focus-room-active-page').classList.add('hidden');
+
+      if (page === 'landing') document.getElementById('landing-page').classList.remove('hidden');
+      if (page === 'auth') document.getElementById('auth-page').classList.remove('hidden');
+      if (page === 'app') {
+        document.getElementById('app-layout').classList.remove('hidden');
+        switchMainTab('dashboard');
+      }
+      if (page === 'focus-running') {
+        document.getElementById('focus-room-active-page').classList.remove('hidden');
+      }
+    }
+
+    function switchAuthTab(mode) {
+      const tabLogin = document.getElementById('tab-login');
+      const tabRegister = document.getElementById('tab-register');
+      const fieldEmail = document.getElementById('field-email');
+      const forgotPassword = document.getElementById('forgot-password');
+      const btnSubmit = document.getElementById('btn-submit');
+
+      if (mode === 'login') {
+        tabLogin.className = "flex-1 py-2.5 text-center text-xs font-bold rounded-xl transition bg-emerald-500 text-slate-950 shadow-sm";
+        tabRegister.className = "flex-1 py-2.5 text-center text-xs font-bold rounded-xl transition text-slate-400 hover:text-white";
+        fieldEmail.classList.add('hidden');
+        forgotPassword.classList.remove('hidden');
+        btnSubmit.innerText = "Login";
+      } else {
+        tabRegister.className = "flex-1 py-2.5 text-center text-xs font-bold rounded-xl transition bg-emerald-500 text-slate-950 shadow-sm";
+        tabLogin.className = "flex-1 py-2.5 text-center text-xs font-bold rounded-xl transition text-slate-400 hover:text-white";
+        fieldEmail.classList.remove('hidden');
+        forgotPassword.classList.add('hidden');
+        btnSubmit.innerText = "Daftar";
+      }
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const username = document.getElementById('input-username').value || "User";
+      const email = document.getElementById('input-email').value || `${username}@example.com`;
+      
+      currentUser = { username, email };
+
+      document.querySelectorAll('.user-display-name').forEach(el => el.innerText = username);
+      document.querySelectorAll('.user-greeting-name').forEach(el => el.innerText = username);
+      document.querySelectorAll('.user-avatar').forEach(el => el.innerText = username.charAt(0).toUpperCase());
+      document.getElementById('profile-email').innerText = email;
+
+      showPage('app');
+    }
+
+    function switchMainTab(tab) {
+      const tabs = ['dashboard', 'explore', 'history', 'profile'];
+      tabs.forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        const navEl = document.getElementById(`nav-${t}`);
+        if (navEl) navEl.className = "flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900 transition";
+      });
+
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+      const activeNav = document.getElementById(`nav-${tab}`);
+      if (activeNav) activeNav.className = "flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 shadow-md";
+    }
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function applyPresetDuration() {
+      const preset = document.getElementById('preset-duration-select').value;
+      const customField = document.getElementById('custom-duration-field');
+      const durationInput = document.getElementById('new-room-duration');
+
+      if (preset === 'custom') {
+        customField.classList.remove('hidden');
+      } else {
+        customField.classList.add('hidden');
+        durationInput.value = preset;
+      }
+    }
+
+    async function handleCreateRoom(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit-room');
+      btn.innerText = "Menerbitkan...";
+      btn.disabled = true;
+
+      const title = document.getElementById('new-room-title').value;
+      const target = document.getElementById('new-room-target').value;
+      const duration = parseInt(document.getElementById('new-room-duration').value);
+
+      const { error } = await supabaseClient
+        .from('rooms')
+        .insert([{ title, target, duration, active_users: 1 }]);
+
+      btn.innerText = "Buat dan Terbitkan Room";
+      btn.disabled = false;
+
+      if (!error) {
+        closeModal('modal-create-room');
+        document.getElementById('new-room-title').value = '';
+        document.getElementById('new-room-target').value = '';
+        fetchRooms();
+      }
+    }
+
+    // ================= FITUR HAPUS ROOM =================
+    async function deleteRoom(roomId, event) {
+      event.stopPropagation(); // Mencegah klik card/room ikut ter-trigger
+      
+      if (!confirm('Apakah kamu yakin ingin menghapus room ini?')) return;
+
+      const { error } = await supabaseClient
+        .from('rooms')
+        .delete()
+        .eq('id', roomId);
+
+      if (error) {
+        alert('Gagal menghapus room: ' + error.message);
+      } else {
+        fetchRooms();
+      }
+    }
+
+    function renderRooms() {
+      const activeContainer = document.getElementById('active-rooms-list');
+      const exploreContainer = document.getElementById('explore-rooms-list');
+
+      const roomCardsHTML = roomsData.length === 0 ? '' : roomsData.map(r => `
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl hover:border-slate-700 transition flex flex-col justify-between group">
+          <div>
+            <div class="flex justify-between items-start mb-3">
+              <h4 class="font-bold text-base text-white group-hover:text-emerald-400 transition">${r.title}</h4>
+              <div class="flex items-center gap-2">
+                <span class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-3 py-1 rounded-full font-bold flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ${r.active_users} Fokus
+                </span>
+                <!-- Tombol Hapus Room -->
+                <button onclick="deleteRoom(${r.id}, event)" class="p-1.5 bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-xl transition border border-slate-700/50" title="Hapus Room">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-slate-400">🎯 Target: ${r.target}</p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            <span class="text-xs text-slate-400 font-mono font-medium">⏱ ${r.duration}:00</span>
+            <button onclick="startFocusSession(${r.id})" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs px-5 py-2.5 rounded-xl font-bold transition shadow-md shadow-emerald-500/20">
+              Gabung Sesi
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      if (roomsData.length === 0) {
+        activeContainer.innerHTML = `
+          <div class="col-span-full bg-slate-900/50 border border-dashed border-slate-800 rounded-3xl p-12 text-center space-y-3">
+            <div class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto text-slate-500">
+              <i data-lucide="folder-open" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-bold text-slate-300 text-sm">Belum ada room yang aktif</h4>
+          </div>`;
+        exploreContainer.innerHTML = `
+          <div class="col-span-full bg-slate-900/50 border border-dashed border-slate-800 rounded-3xl p-12 text-center space-y-3">
+            <div class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto text-slate-500">
+              <i data-lucide="compass" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-bold text-slate-300 text-sm">Belum ada room publik tersedia</h4>
+          </div>`;
+      } else {
+        activeContainer.innerHTML = roomCardsHTML;
+        exploreContainer.innerHTML = roomCardsHTML;
+      }
+      lucide.createIcons();
+    }
+
+    function copyRoomLink() {
+      if (!activeRoomSession) return;
+      const shareableUrl = `${window.location.origin}${window.location.pathname}?room=${activeRoomSession.id}`;
+
+      navigator.clipboard.writeText(shareableUrl).then(() => {
+        alert('🔗 Link room berhasil disalin! Bagikan ke teman-temanmu untuk fokus bareng.');
+      }).catch(() => {
+        prompt('Salin link room ini manual:', shareableUrl);
+      });
+    }
+
+    async function startFocusSession(roomId) {
+      activeRoomSession = roomsData.find(r => r.id == roomId);
+      if (!activeRoomSession) return;
+
+      const newUrl = `${window.location.pathname}?room=${roomId}`;
+      window.history.pushState({ path: newUrl }, '', newUrl);
+
+      document.getElementById('active-room-title-display').innerText = activeRoomSession.title;
+      document.getElementById('active-room-target-display').innerText = `Target: ${activeRoomSession.target}`;
+      document.getElementById('pinned-target-display').innerText = activeRoomSession.target;
+
+      totalSessionSeconds = activeRoomSession.duration * 60;
+      totalSecondsRemaining = totalSessionSeconds;
+      isPaused = false;
+
+      connectRoomRealtime(roomId);
+      fetchChatMessages(roomId);
+
+      updateTimerDisplay();
+      showPage('focus-running');
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(tickTimer, 1000);
+    }
+
+    function connectRoomRealtime(roomId) {
+      if (activeRoomChannel) supabaseClient.removeChannel(activeRoomChannel);
+
+      activeRoomChannel = supabaseClient.channel(`room_${roomId}`, {
+        config: { presence: { key: currentUser.username } }
+      });
+
+      activeRoomChannel.on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
+        filter: `room_id=eq.${roomId}`
+      }, payload => {
+        appendChatMessage(payload.new.username, payload.new.text);
+      });
+
+      activeRoomChannel.on('broadcast', { event: 'reaction' }, payload => {
+        displayFloatingReaction(payload.payload.emoji);
+      });
+
+      activeRoomChannel.on('presence', { event: 'sync' }, () => {
+        const state = activeRoomChannel.presenceState();
+        const activeUsers = Object.keys(state);
+        document.getElementById('member-count-badge').innerText = activeUsers.length;
+        renderRealtimeMembers(activeUsers);
+      });
+
+      activeRoomChannel.subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await activeRoomChannel.track({ user: currentUser.username, online_at: new Date().toISOString() });
+        }
+      });
+    }
+
+    async function fetchChatMessages(roomId) {
+      const { data } = await supabaseClient
+        .from('messages')
+        .select('*')
+        .eq('room_id', roomId)
+        .order('created_at', { ascending: true });
+
+      const chatContainer = document.getElementById('chat-messages');
+      chatContainer.innerHTML = `
+        <div class="bg-slate-900 p-3.5 rounded-2xl border border-slate-800">
+          <span class="font-bold text-emerald-400">System</span>
+          <p class="text-slate-300 mt-1">Selamat datang di room! Silakan gunakan chat ini untuk berdiskusi dengan sopan.</p>
+        </div>
+      `;
+
+      if (data) {
+        data.forEach(msg => appendChatMessage(msg.username, msg.text));
+      }
+    }
+
+    async function sendChatMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text || !activeRoomSession) return;
+
+      await supabaseClient
+        .from('messages')
+        .insert([{ room_id: activeRoomSession.id, username: currentUser.username, text: text }]);
+
+      input.value = '';
+    }
+
+    function appendChatMessage(username, text) {
+      const chatContainer = document.getElementById('chat-messages');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = "bg-slate-900 p-3.5 rounded-2xl border border-slate-800";
+      msgDiv.innerHTML = `
+        <span class="font-bold ${username === currentUser.username ? 'text-emerald-400' : 'text-slate-200'}">${username}</span>
+        <p class="text-slate-300 mt-1">${text}</p>
+      `;
+      chatContainer.appendChild(msgDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function sendReaction(emoji) {
+      if (activeRoomChannel) {
+        activeRoomChannel.send({
+          type: 'broadcast',
+          event: 'reaction',
+          payload: { emoji: emoji }
+        });
+      }
+      displayFloatingReaction(emoji);
+    }
+
+    function displayFloatingReaction(emoji) {
+      const area = document.getElementById('reaction-float-area');
+      const reactionEl = document.createElement('span');
+      reactionEl.className = "text-2xl animate-bounce";
+      reactionEl.innerText = emoji;
+      area.appendChild(reactionEl);
+
+      setTimeout(() => reactionEl.remove(), 2000);
+    }
+
+    function renderRealtimeMembers(userList) {
+      const membersContainer = document.getElementById('members-list');
+      membersContainer.innerHTML = userList.map(u => `
+        <div class="bg-slate-900 p-3.5 rounded-2xl flex items-center justify-between border border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-emerald-500 text-slate-950 rounded-xl flex items-center justify-center font-bold text-xs shadow-sm">${u.charAt(0).toUpperCase()}</div>
+            <span class="font-bold text-slate-200">${u} ${u === currentUser.username ? '(Kamu)' : ''}</span>
+          </div>
+          <span class="text-[10px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-full font-bold">Fokus</span>
+        </div>
+      `).join('');
+    }
+
+    function tickTimer() {
+      if (isPaused) return;
+      if (totalSecondsRemaining > 0) {
+        totalSecondsRemaining--;
+        updateTimerDisplay();
+      } else {
+        clearInterval(timerInterval);
+        playCompletionSound();
+        finishSessionNow();
+      }
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(totalSecondsRemaining / 60);
+      const seconds = totalSecondsRemaining % 60;
+      document.getElementById('timer-display').innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+      const progressCircle = document.getElementById('timer-progress-circle');
+      const offset = 911 - (totalSecondsRemaining / totalSessionSeconds) * 911;
+      progressCircle.style.strokeDashoffset = offset;
+    }
+
+    function togglePauseTimer() {
+      isPaused = !isPaused;
+      const btn = document.getElementById('btn-pause-timer');
+      const badge = document.getElementById('timer-status-badge');
+
+      if (isPaused) {
+        btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> Lanjut Fokus`;
+        badge.innerText = "ISTIRAHAT";
+        badge.className = "text-xs font-bold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/20";
+      } else {
+        btn.innerHTML = `<i data-lucide="pause" class="w-4 h-4"></i> Istirahat`;
+        badge.innerText = "SESI AKTIF";
+        badge.className = "text-xs font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20";
+      }
+      lucide.createIcons();
+    }
+
+    function playCompletionSound() {
+      const bellType = document.getElementById('bell-sound-select').value;
+      const soundEl = document.getElementById(`audio-${bellType}`);
+      if (soundEl) soundEl.play();
+    }
+
+    function finishSessionNow() {
+      stopAmbientSounds();
+      clearInterval(timerInterval);
+      if (activeRoomChannel) activeRoomChannel.unsubscribe();
+
+      const minsSpent = Math.ceil((totalSessionSeconds - totalSecondsRemaining) / 60) || 1;
+
+      historyData.push({
+        title: activeRoomSession.title,
+        target: activeRoomSession.target,
+        duration: minsSpent
+      });
+
+      renderHistory();
+      alert(`🎉 Sesi "${activeRoomSession.title}" selesai! Kamu telah fokus selama ${minsSpent} menit.`);
+      if(isZenMode) toggleZenMode();
+
+      window.history.pushState({}, '', window.location.pathname);
+      showPage('app');
+    }
+
+    function leaveSessionEarly() {
+      if (confirm('Yakin ingin meninggalkan room lebih awal?')) {
+        stopAmbientSounds();
+        clearInterval(timerInterval);
+        if (activeRoomChannel) activeRoomChannel.unsubscribe();
+        if(isZenMode) toggleZenMode();
+
+        window.history.pushState({}, '', window.location.pathname);
+        showPage('app');
+      }
+    }
+
+    function toggleZenMode() {
+      isZenMode = !isZenMode;
+      const rightCol = document.getElementById('room-right-col');
+      const leftCol = document.getElementById('room-left-col');
+      const zenText = document.getElementById('zen-btn-text');
+
+      if (isZenMode) {
+        rightCol.classList.add('hidden');
+        leftCol.classList.replace('lg:col-span-2', 'lg:col-span-3');
+        zenText.innerText = "Keluar Zen";
+      } else {
+        rightCol.classList.remove('hidden');
+        leftCol.classList.replace('lg:col-span-3', 'lg:col-span-2');
+        zenText.innerText = "Zen Mode";
+      }
+    }
+
+    function switchRightPanel(panel) {
+      document.getElementById('panel-chat').classList.add('hidden');
+      document.getElementById('panel-members').classList.add('hidden');
+      document.getElementById('panel-todo').classList.add('hidden');
+
+      document.getElementById('right-tab-chat').className = "flex-1 py-3.5 text-center border-b-2 border-transparent hover:text-white transition";
+      document.getElementById('right-tab-members').className = "flex-1 py-3.5 text-center border-b-2 border-transparent hover:text-white transition";
+      document.getElementById('right-tab-todo').className = "flex-1 py-3.5 text-center border-b-2 border-transparent hover:text-white transition";
+
+      document.getElementById(`panel-${panel}`).classList.remove('hidden');
+      document.getElementById(`right-tab-${panel}`).className = "flex-1 py-3.5 text-center border-b-2 border-emerald-500 text-emerald-400 font-bold transition";
+    }
+
+    function addTodoItem(e) {
+      e.preventDefault();
+      const input = document.getElementById('todo-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      todoItems.push({ id: Date.now(), text, done: false });
+      renderTodoList();
+      input.value = '';
+    }
+
+    function toggleTodoDone(id) {
+      const item = todoItems.find(t => t.id === id);
+      if (item) item.done = !item.done;
+      renderTodoList();
+    }
+
+    function renderTodoList() {
+      const container = document.getElementById('todo-items-list');
+      container.innerHTML = todoItems.map(t => `
+        <div onclick="toggleTodoDone(${t.id})" class="flex items-center gap-3 bg-slate-900 p-3.5 rounded-2xl border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+          <input type="checkbox" ${t.done ? 'checked' : ''} class="w-4 h-4 rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-0">
+          <span class="text-xs ${t.done ? 'line-through text-slate-500' : 'text-slate-200'}">${t.text}</span>
+        </div>
+      `).join('');
+    }
+
+    function changeAmbientSound() {
+      stopAmbientSounds();
+      const val = document.getElementById('ambient-select').value;
+      if (val !== 'none') {
+        const audio = document.getElementById(`audio-${val}`);
+        if (audio) audio.play();
+      }
+    }
+
+    function stopAmbientSounds() {
+      ['rain', 'cafe', 'lofi'].forEach(sound => {
+        const audio = document.getElementById(`audio-${sound}`);
+        if (audio) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      });
+    }
+
+    function renderHistory() {
+      const historyList = document.getElementById('history-list');
+      const emptyHistory = document.getElementById('empty-history');
+      
+      if (historyData.length > 0) {
+        emptyHistory.classList.add('hidden');
+        let totalMins = 0;
+
+        historyList.innerHTML = historyData.map(h => {
+          totalMins += parseInt(h.duration);
+          return `
+            <div class="bg-slate-900 border border-slate-800 p-5 rounded-3xl shadow-xl flex justify-between items-center">
+              <div>
+                <h4 class="font-bold text-base text-white">${h.title}</h4>
+                <p class="text-xs text-slate-400 mt-1">Durasi: ${h.duration} menit • Target: ${h.target}</p>
+              </div>
+              <span class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-3 py-1 rounded-xl font-bold">SELESAI</span>
+            </div>
+          `;
+        }).join('');
+
+        const userLevel = Math.floor(totalMins / 30) + 1;
+
+        document.getElementById('history-total-time').innerText = `${totalMins} menit`;
+        document.getElementById('stat-today-time').innerText = `${totalMins}m`;
+        document.getElementById('stat-total-sessions').innerText = `${historyData.length} Sesi`;
+        document.getElementById('profile-level').innerText = `Lvl ${userLevel}`;
+        document.getElementById('profile-total-time').innerText = `${totalMins} Mnt`;
+      }
+    }
+
+    function logout() {
+      stopAmbientSounds();
+      clearInterval(timerInterval);
+      if (activeRoomChannel) activeRoomChannel.unsubscribe();
+      historyData = [];
+      showPage('landing');
+    }
+
+    async function checkUrlForRoomShare() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sharedRoomId = urlParams.get('room');
+
+      if (sharedRoomId) {
+        if (roomsData.length === 0) await fetchRooms();
+        const targetRoom = roomsData.find(r => r.id == sharedRoomId);
+        if (targetRoom) startFocusSession(sharedRoomId);
+      }
+    }
+
+    fetchRooms().then(() => {
+      checkUrlForRoomShare();
+    });
+    setupRealtimeSubscription();
+  </script>
+</body>
+</html>
